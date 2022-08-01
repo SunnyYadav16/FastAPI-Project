@@ -1,16 +1,13 @@
-from typing import List
+from typing import List, Optional
 
 from pydantic import BaseModel
 
 
 # USER SCHEMAS
-class UserBase(BaseModel):
+class BaseSchema(BaseModel):
     first_name: str
     last_name: str
     email: str
-
-
-class UserCreate(UserBase):
     password: str
 
 
@@ -24,19 +21,6 @@ class ShowUser(BaseModel):
 
 
 # DOCTOR'S SCHEMAS
-class DoctorBase(BaseModel):
-    first_name: str
-    last_name: str
-    email: str
-
-    class Config:
-        orm_mode = True
-
-
-class DoctorCreate(DoctorBase):
-    password: str
-
-
 class CreatePortfolio(BaseModel):
     experience: int
     speciality: str
@@ -54,3 +38,23 @@ class ShowDoctor(BaseModel):
 
     class Config:
         orm_mode = True
+
+
+class Login(BaseModel):
+    username: str
+    password: str
+
+    class Config:
+        orm_mode = True
+
+
+class Token(BaseModel):
+    access_token: str
+    token_type: str
+
+    class Config:
+        orm_mode = True
+
+
+class TokenData(BaseModel):
+    email: Optional[str] = None

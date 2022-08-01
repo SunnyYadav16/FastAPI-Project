@@ -1,7 +1,15 @@
+from enum import Enum
+
 from sqlalchemy import Column, Integer, String, Boolean, DateTime, ForeignKey
 from sqlalchemy.orm import relationship
 
 from .database import Base
+
+
+class ModelName(str, Enum):
+    user = "User"
+    doctor = "Doctor"
+    admin = "Admin"
 
 
 class BaseClass(Base):
@@ -11,6 +19,7 @@ class BaseClass(Base):
     last_name = Column(String(100))
     email = Column(String(100))
     password = Column(String(100))
+    role = Column(String(100))
 
 
 class User(BaseClass):
@@ -33,5 +42,10 @@ class DoctorPortfolio(Base):
     description = Column(String(200))
     doctor = relationship("Doctor", back_populates="portfolio")
 
+
 # class Appointment():
 #     __tablename__ = "appointment"
+
+class Admin(BaseClass):
+    __tablename__ = "admins"
+    is_active = Column(Boolean, default=True)
