@@ -1,10 +1,9 @@
-from datetime import datetime
 from typing import List
 
-from fastapi import APIRouter, Depends, HTTPException, status, Query
+from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
-from My_Project.Consultancy import database, schemas, models, oauth2
+from My_Project.Consultancy import database, schemas, models
 
 user_routes = APIRouter(
     tags=["Users"]
@@ -25,15 +24,14 @@ get_db = database.get_db
 
 
 @user_routes.post("/retrieve_single_user/{email}", status_code=status.HTTP_200_OK, response_model=schemas.ShowUser)
-def retrieve_user(email: str, db: Session = Depends(get_db),
-                  current_user: schemas.ShowUser = Depends(oauth2.get_current_user)):
+async def retrieve_user(email: str, db: Session = Depends(get_db)):
     user = db.query(models.User).filter(models.User.email == email).first()
     if not user:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Invalid Credentials")
-    return user
+    return {"message": "User retrieved successfully", "user": user}
 
 
 @user_routes.get("/retrieve_all_users", status_code=status.HTTP_200_OK, response_model=List[schemas.ShowUser])
-def retrieve_all_users(db: Session = Depends(get_db), current_user: schemas.ShowUser = Depends(oauth2.get_current_user)):
+async def retrieve_all_users(db: Session = Depends(get_db)):
     all_users = db.query(models.User).all()
     return all_users

@@ -1,16 +1,16 @@
-from fastapi import Depends, HTTPException, status
-from fastapi.security import OAuth2PasswordBearer
-
-from My_Project.Consultancy.JWT_token import verify_token
-
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
+from My_Project.Consultancy import models
+from My_Project.Consultancy.hashing import Hash
 
 
-def get_current_user(token: str = Depends(oauth2_scheme)):
-    credentials_exception = HTTPException(
-        status_code=status.HTTP_401_UNAUTHORIZED,
-        detail="Could not validate credentials",
-        headers={"WWW-Authenticate": "Bearer"},
-    )
+def get_user(db, email: str):
+    user_dict = db.query(models.User).filter(models.User.email == email).first()
+    return user_dict
 
-    return verify_token(token, credentials_exception)
+
+def authenticate_user(db, email: str, password: str):
+    user = get_user(db, email)
+    if not user:
+        return False
+    if not Hash.verify_password(password, user.password):
+        return False
+    return user
