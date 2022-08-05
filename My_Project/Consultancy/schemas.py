@@ -4,11 +4,25 @@ from pydantic import BaseModel
 
 
 # USER SCHEMAS
+class ShowAppointment(BaseModel):
+    id: int
+    appointment_date: str
+    description: str
+    is_approved: bool
+    is_consulted: bool
+    created_at: str
+    updated_at: str
+
+    class Config:
+        orm_mode = True
+
+
 class ShowUser(BaseModel):
     id: int
     first_name: str
     last_name: str
     email: str
+    appointment: List[ShowAppointment] = []
 
     class Config:
         orm_mode = True
@@ -20,6 +34,7 @@ class CreatePortfolio(BaseModel):
     speciality: str
     description: str
     rating: int
+    recommendation: str
 
     class Config:
         orm_mode = True

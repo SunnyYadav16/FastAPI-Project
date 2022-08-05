@@ -14,3 +14,10 @@ def authenticate_user(db, email: str, password: str):
     if not Hash.verify_password(password, user.password):
         return False
     return user
+
+
+def if_already_registered(db, email: str):
+    user = get_user(db, email)
+    if user:
+        return True
+    return False

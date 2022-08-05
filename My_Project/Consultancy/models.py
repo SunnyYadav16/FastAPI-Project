@@ -8,7 +8,7 @@ from .database import Base
 
 class ModelName(str, Enum):
     Like = "Like"
-    Unlike = "Unlike"
+    Dislike = "Dislike"
 
 
 class BaseClass(Base):
@@ -40,6 +40,7 @@ class DoctorPortfolio(Base):
     speciality = Column(String(100))
     description = Column(String(200))
     rating = Column(Integer, default=0)
+    recommendation = Column(String(20), default="")
 
     doctor = relationship("User", back_populates="portfolio")
 
@@ -55,6 +56,7 @@ class Appointment(Base):
     description = Column(String(200))
     is_approved = Column(Boolean, default=False)
     is_consulted = Column(Boolean, default=False)
+    consultancy_rating = Column(String(10))
 
     doctor = relationship("User", foreign_keys=[doctor_id])
     user = relationship("User", foreign_keys=[user_id])

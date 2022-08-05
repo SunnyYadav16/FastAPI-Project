@@ -9,6 +9,7 @@ from fastapi.responses import HTMLResponse
 from My_Project.Consultancy import database, models, schemas, oauth2
 from My_Project.Consultancy.JWT_token import create_access_token, ACCESS_TOKEN_EXPIRE_HOURS, get_current_active_user
 from My_Project.Consultancy.hashing import Hash
+from My_Project.Consultancy.oauth2 import if_already_registered
 from My_Project.Consultancy.schemas import Token, ShowUser
 
 auth_router = APIRouter(
@@ -54,6 +55,11 @@ async def register(db: Session = Depends(get_db), first_name: str = Form(),
                    last_name: str = Form(), email: str = Form(), password: str = Form(), role: str = Form()):
 
     registered_role = db.query(models.Role).filter(models.Role.role_name == role).first()
+
+    already_register_check = if_already_registered(db, email)
+    if already_register_check:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="User already registered")
+
     new_user = models.User(first_name=first_name, last_name=last_name,
                            email=email, password=Hash.get_password_hash(password),
                            created_at=datetime.now(), is_active=True, role_id=registered_role.id)
