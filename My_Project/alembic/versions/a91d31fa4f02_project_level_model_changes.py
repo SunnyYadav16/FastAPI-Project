@@ -1,8 +1,8 @@
-"""changed columns
+"""Project Level Model Changes
 
-Revision ID: 0e61ba3d867e
-Revises: 75abb792f94b
-Create Date: 2022-07-29 14:37:19.402458
+Revision ID: a91d31fa4f02
+Revises: 64d6bdbb04d2
+Create Date: 2022-08-04 18:09:53.052803
 
 """
 from alembic import op
@@ -10,8 +10,8 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '0e61ba3d867e'
-down_revision = '75abb792f94b'
+revision = 'a91d31fa4f02'
+down_revision = '64d6bdbb04d2'
 branch_labels = None
 depends_on = None
 

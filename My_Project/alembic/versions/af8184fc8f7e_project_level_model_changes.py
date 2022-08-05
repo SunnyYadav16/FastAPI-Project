@@ -1,8 +1,8 @@
-"""Added New Model - Portfolio for Doctors
+"""Project Level Model Changes
 
-Revision ID: dbcf7b040656
-Revises: 0e61ba3d867e
-Create Date: 2022-07-29 16:43:36.913622
+Revision ID: af8184fc8f7e
+Revises: f7165cb353a0
+Create Date: 2022-08-04 18:24:07.529993
 
 """
 from alembic import op
@@ -10,8 +10,8 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'dbcf7b040656'
-down_revision = '0e61ba3d867e'
+revision = 'af8184fc8f7e'
+down_revision = 'f7165cb353a0'
 branch_labels = None
 depends_on = None
 

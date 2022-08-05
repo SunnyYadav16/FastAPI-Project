@@ -9,7 +9,6 @@ from fastapi.responses import HTMLResponse
 from My_Project.Consultancy import database, models, schemas, oauth2
 from My_Project.Consultancy.JWT_token import create_access_token, ACCESS_TOKEN_EXPIRE_HOURS, get_current_active_user
 from My_Project.Consultancy.hashing import Hash
-# from My_Project.Consultancy.models import ModelName
 from My_Project.Consultancy.schemas import Token, ShowUser
 
 auth_router = APIRouter(
@@ -30,8 +29,7 @@ async def read_items(current_user: ShowUser = Depends(get_current_active_user)):
 
 
 @auth_router.post("/token", response_model=Token)
-async def login(request: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db), username: str = Form(),
-                password: str = Form()):
+async def login(request: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
     user = oauth2.authenticate_user(db, request.username, request.password)
     if not user or not Hash.verify_password(request.password, user.password):
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Invalid Credentials")
@@ -53,36 +51,14 @@ async def login(request: OAuth2PasswordRequestForm = Depends(), db: Session = De
 # @auth_router.post("/register/form/", response_class=HTMLResponse)
 @auth_router.post("/register/form/")
 async def register(db: Session = Depends(get_db), first_name: str = Form(),
-             last_name: str = Form(), email: str = Form(), password: str = Form(), role: str = Form()):
+                   last_name: str = Form(), email: str = Form(), password: str = Form(), role: str = Form()):
 
     registered_role = db.query(models.Role).filter(models.Role.role_name == role).first()
-
-    if registered_role.role_name == "User":
-        new_user = models.User(first_name=first_name, last_name=last_name,
-                               email=email, password=Hash.get_password_hash(password),
-                               created_at=datetime.now(), is_active=True, role_id=registered_role.id)
-        db.add(new_user)
-        db.commit()
-        db.refresh(new_user)
-        # return templates.TemplateResponse("login.html", context={"request": request, "user": new_user})
-        return {"message": f"User {new_user.first_name} {new_user.last_name} registered successfully"}
-
-    elif registered_role.role_name == "Doctor":
-        new_doctor = models.Doctor(first_name=first_name, last_name=last_name,
-                                   email=email, password=Hash.get_password_hash(password),
-                                   role_id=registered_role.id)
-        db.add(new_doctor)
-        db.commit()
-        db.refresh(new_doctor)
-        # return templates.TemplateResponse("login.html", context={"request": request, "new_doctor": new_doctor})
-        return {"message": f"User {new_doctor.first_name} {new_doctor.last_name} registered successfully"}
-
-    elif registered_role.role_name == "Admin":
-        new_admin = models.Admin(first_name=first_name, last_name=last_name,
-                                 email=email, password=Hash.get_password_hash(password),
-                                 role_id=registered_role.id)
-        db.add(new_admin)
-        db.commit()
-        db.refresh(new_admin)
-        # return templates.TemplateResponse("login.html", context={"request": request, "new_admin": new_admin})
-        return  {"message": f"User {new_admin.first_name} {new_admin.last_name} registered successfully"}
+    new_user = models.User(first_name=first_name, last_name=last_name,
+                           email=email, password=Hash.get_password_hash(password),
+                           created_at=datetime.now(), is_active=True, role_id=registered_role.id)
+    db.add(new_user)
+    db.commit()
+    db.refresh(new_user)
+    # return templates.TemplateResponse("login.html", context={"request": request, "user": new_user})
+    return {"message": f"User {new_user.first_name} {new_user.last_name} registered successfully"}

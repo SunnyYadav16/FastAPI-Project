@@ -4,13 +4,6 @@ from pydantic import BaseModel
 
 
 # USER SCHEMAS
-class BaseSchema(BaseModel):
-    first_name: str
-    last_name: str
-    email: str
-    password: str
-
-
 class ShowUser(BaseModel):
     id: int
     first_name: str
@@ -26,6 +19,7 @@ class CreatePortfolio(BaseModel):
     experience: int
     speciality: str
     description: str
+    rating: int
 
     class Config:
         orm_mode = True
